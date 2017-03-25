@@ -27,7 +27,7 @@
         android:layout_alignBottom="@+id/enviar"
         android:hint="Escribe aquí tu mensaje"/>
     <EditText
-        android:id="@+id/userDest"
+        android:id="@+id/nick"
         android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/message"

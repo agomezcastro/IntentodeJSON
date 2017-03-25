@@ -20,6 +20,8 @@ import android.widget.TextView;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     private static final int MY_PERMISSIONS_REQUEST_INTERNET=1;
 
 
-
+    JSONObject cliente;
 
 
     @Override
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        connectWebSocket();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            
+            connectWebSocket();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -132,13 +134,27 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        cliente = new JSONObject();
+        try{
+            cliente.put("id","cliente");
+            cliente.put("mensaje", "bienvenido");
+            cliente.put("privacidad", false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         Map<String, String> headers = new HashMap<>();
         mWebSocketClient = new WebSocketClient(uri, new Draft_17(), headers, 0) {
 
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
                 Log.i("Websocket", "Opened");
-                mWebSocketClient.send("Alguien");
+                EditText usuario = (EditText)findViewById(R.id.nick);
+                try {
+                    mWebSocketClient.send(cliente.getString("id"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
